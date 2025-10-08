@@ -1,7 +1,7 @@
 def fatorial(n):
-    if n < 0:
+    if n < 0:       # restrição
         return 0
-    if n == 1:
+    if n == 1:      # caso base
         return 1
     else:
         return n*fatorial(n-1)

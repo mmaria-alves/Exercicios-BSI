@@ -1,9 +1,9 @@
 def exponencial(a, n):
-    if a == 0 and n == 0:
+    if a == 0 and n == 0:       # restrição
         return "Impossível calcular."
-    if n < 0:
+    if n < 0:       # restrição
         return 1
-    if n == 0:
+    if n == 0:      # caso base
         return 1
     else:
         return a*exponencial(a, n-1)
