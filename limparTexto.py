@@ -1,11 +1,11 @@
 # separação dos caracteres especiais
-caracteres_especiais = [",", ".", ";", ":", "!", "?", "_", "-", "+", "=", "@", "&", "/"]
+caracteres_especiais = [",", ".", ";", ":", "!", "?", "_", "-", "+", "=", "@", "&", "/", "*"]
 c_esp_A = ["á", "à", "ã", "ä", "â"]
 c_esp_E = ["é", "è", "ẽ", "ë", "ê"]
 c_esp_I = ["í", "ì", "ĩ", "ï", "î"]
 c_esp_O = ["ó", "ò", "õ", "ö", "ô"]
 c_esp_U = ["ú", "ù", "ũ", "ü", "û"]
-c_esp_Ç = ["c"]
+c_esp_C = ["c"]
 
 
 def limparTexto(mensagem_poluida):
@@ -26,7 +26,7 @@ def limparTexto(mensagem_poluida):
             mensagem_poluida = mensagem_poluida.replace(char, "o")
         elif char in c_esp_U:
             mensagem_poluida = mensagem_poluida.replace(char, "u")
-        elif char in c_esp_Ç:
+        elif char in c_esp_C:
             mensagem_poluida = mensagem_poluida.replace(char, "c")
 
     # para remover os números
