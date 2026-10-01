@@ -128,31 +128,196 @@ class ArvoreBinaria:
         else:
             y.right = z
 
+    def treeDelete(self, z):
+        if z.left is None or z.right is None:
+            y = z
+        else:
+            y = self.treeSuccessor(z)
 
+        if y.left is not None:
+            x = y.left
+        else: 
+            x = y.right
 
+        if x is not None:
+            x.pai = y.pai
+
+        if y.pai is None:
+            self.root = x
+        elif y == y.pai.left:
+            y.pai.left = x
+        else:
+            y.pai.right = x
+
+        if y != z:
+            z.dado = y.dado
+
+        return y
+
+class NodoAVL(Nodo):
+    def __init__(self, dado):
+        super().__init__(dado)
+        self.altura = 1
+
+class ArvoreAVL(ArvoreBinaria):
+    def __init__(self):
+        super().__init__()
+
+    def nodeHeight(self, x):
+        if x is None:
+            return 0
+        return getattr(x, 'altura', 1)
+
+    def balanceFactor(self, x):
+        if x is None:
+            return 0
+        return self.nodeHeight(x.left) - self.nodeHeight(x.right)
+
+    def updateHeight(self, x):
+        if x is not None:
+            x.altura = 1 + max(self.nodeHeight(x.left), self.nodeHeight(x.right))
+
+    def leftRotate(self, x):
+        y = x.right
+        x.right = y.left
+
+        if y.left is not None:
+            y.left.pai = x
+
+        y.pai = x.pai
+
+        if x.pai is None:
+            self.root = y
+        elif x == x.pai.left:
+            x.pai.left = y
+        else:
+            x.pai.right = y
+
+        x.left = x
+        x.pai = y
+
+        self.updateHeight(x)
+        self.updateHeight(y)
+
+    def rightRotate(self, y):
+        x = y.left
+        y.right = x.left
+
+        if x.right is not None:
+            x.right.pai = y
+
+        x.pai = y.pai
+
+        if y.pai is None:
+            self.root = x
+        elif y == y.pai.right:
+            y.pai.right = x
+        else:
+            y.pai.left = x
+
+        x.right = y
+        y.pai = x
+
+        self.updateHeight(y)
+        self.updateHeight(x)
+
+    def treeRebalancing(self, z):
+        self.updateHeight(z)
+        bf = self.balanceFactor(z)
+
+        # Caso 1 - rotação simples a direita
+        if bf > 1 and self.balanceFactor(z.left) >=0:
+            self.rightRotate(z)
+
+        # Caso 2- rotação dupla a direita
+        if bf > 1 and self.balanceFactor(z.left) < 0:
+            self.leftRotate(z.left)
+            self.rightRotate(z)
+
+        # Caso 3 - rotação simples a esquerda
+        if bf < -1 and self.balanceFactor(z.right) <= 0:
+            self.leftRotate(z)
+
+        # Caso 4 - rotação dupla a esquerda
+        if bf < -1 and self.balanceFactor(z.right) > 0:
+            self.rightRotate(z.right)
+            self.leftRotate(z)
+
+    def insertAVl(self, z):
+        self.treeInsert(z)
+
+        atual = z.pai
+        while atual is not None:
+            pai_aux = atual.pai
+            self.treeRebalancing(atual)
+            atual = pai_aux
+
+class NodoRB(Nodo):
+    def __init__(self, dado, color="RED"):
+        super().__init__(dado)
+        self.color = color
+        self.pai = None
+
+class ArvoreRB(ArvoreBinaria):
+    def __init__(self):
+        super().__init__()
+        self.root = None
+
+    def getColor(self, nodo):
+        if nodo is None:
+            return "BLACK"
+        return nodo.color
+
+    def RBInsert(self, z):
+        y = None
+        x = self.root
+
+        while x is not None:
+            y = x
+            if z.dado < x.dado:
+                x = x.left
+            else:
+                x = x.right
+        z.pai = y
+        if y is None:
+            self.root = z
+        elif z.dado < y.dado:
+            y.left = z
+        else:
+            y.right = z
+
+        z.left = None
+        z.right = None
+        z.color = "RED"
+        self.RBInsertFixup(self, z)
+
+    def RBInsertFixup(self, z):
+        while z.pai.color == "RED":
+            if z.pai == z.pai.pai.left:
+                y = z.pai.pai.right
+                if y.color == "RED":
+                    z.pai.color = "BLACK"
+                    y.color = "BLACK"
+                    z.pai.pai.color = "RED"
+                    z = z.pai.pai
+                elif z == z.pai.right:
+                    z = z.ai
+                    self.
 
 
 if __name__ == '__main__':
-    arvore = ArvoreBinaria()
+    avl = ArvoreAVL()
 
-    valores = [12, 5, 18, 2, 9, 15, 19, 17]
-    # Árvore resultante esperada:
-    #            12
-    #          /    \
-    #         5      18
-    #        / \    /  \
-    #       2   9  15   19
-    #               \
-    #                17
+    elementos = [10, 20, 30, 40, 50, 25]
 
-    print("=== INSERINDO ELEMENTOS ===")
-    for v in valores:
-        arvore.treeInsert(Nodo(v))
-        print(f"Inserido: {v}")
+    print("Inserindo na árvore AVL: ")
+    for elemento in elementos:
+        avl.rbInsert(NodoAVL(elemento))
 
-    print("\n--- 1. Teste de Ordenação (In-Order) ---")
-    # Se a inserção BST estiver correta, a saída DEVE ser estritamente crescente
-    print("Esperado: 2 5 9 12 15 17 18 19")
-    print("Obtido:  ", end=" ")
-    arvore.inOrderTreeWalk(arvore.root)
-    print("\n")
+    print("\nCaminhando em ordem: ")
+    avl.inOrderTreeWalk(avl.root)
+
+    print("\nCaminhando em pré-ordem: ")
+    avl.preOrderTreeWalk(avl.root)
+
+    print(f"raiz atual da AVL: {avl.root.getInfo()}")
