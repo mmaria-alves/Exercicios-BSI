@@ -256,7 +256,10 @@ class NodoRB(Nodo):
     def __init__(self, dado, color="RED"):
         super().__init__(dado)
         self.color = color
+        self.dado = dado
         self.pai = None
+        self.left = None
+        self.right = None
 
 class ArvoreRB(ArvoreBinaria):
     def __init__(self):
@@ -268,6 +271,44 @@ class ArvoreRB(ArvoreBinaria):
             return "BLACK"
         return nodo.color
 
+    def leftRotate(self, x):
+        y = x.right
+        x.right = y.left
+
+        if y.left is not None:
+            y.left.pai = x
+
+        y.pai = x.pai
+
+        if x.pai is None:
+            self.root = y
+        elif x == x.pai.left:
+            x.pai.left = y
+        else:
+            x.pai.right = y
+        y.left = x
+        x.pai = y
+    
+
+    def rightRotate(self, y):
+        x = y.left
+        y.left = x.right
+
+        if x.right is not None:
+            x.right.pai = y
+
+        x.pai = y.pai
+
+        if y.pai is None:
+            self.root = x
+        elif y == y.pai.right:
+            y.pai.right = x
+        else:
+            y.pai.left = x
+
+        x.right = y
+        x.pai = x
+
     def RBInsert(self, z):
         y = None
         x = self.root
@@ -278,6 +319,7 @@ class ArvoreRB(ArvoreBinaria):
                 x = x.left
             else:
                 x = x.right
+
         z.pai = y
         if y is None:
             self.root = z
@@ -289,35 +331,55 @@ class ArvoreRB(ArvoreBinaria):
         z.left = None
         z.right = None
         z.color = "RED"
-        self.RBInsertFixup(self, z)
+        self.RBInsertFixup(z)
 
     def RBInsertFixup(self, z):
-        while z.pai.color == "RED":
+        while z.pai is not None and z.pai.color == "RED":
+            if z.pai.pai is None:
+                break
+
             if z.pai == z.pai.pai.left:
                 y = z.pai.pai.right
-                if y.color == "RED":
+
+                if self.getColor(y) == "RED":
                     z.pai.color = "BLACK"
-                    y.color = "BLACK"
+                    if y is not None:
+                        y.color = "BLACK"
                     z.pai.pai.color = "RED"
                     z = z.pai.pai
-                elif z == z.pai.right:
-                    z = z.ai
-                    self.
+                else: 
+                    if z == z.pai.right:
+                        z = z.pai
+                        self.leftRotate(z)
+                z.pai.color = "BLACK"
+                z.pai.pai.color = "RED"
+                self.rightRotate(z.pai.pai)
+            else:
+                y = z.pai.pai.left
+                if self.getColor(y) == "RED":
+                    z.pai.color = "BLACK"
+                    if y is not None:
+                        y.color = "BLACK"
+                    z.pai.pai.color = "RED"
+                    z = z.pai.pai
+                else:
+                    if z == z.pai.left:
+                        z = z.pai
+                        self.rightRotate(z)
+                    z.pai.color = "BLACK"
+                    z.pai.pai.color = "RED"
+                    self.leftRotate(z.pai.pai)
+
+        self.root.color = "BLACK"
+
 
 
 if __name__ == '__main__':
-    avl = ArvoreAVL()
+    rb = ArvoreRB()
 
-    elementos = [10, 20, 30, 40, 50, 25]
+    for v in [10, 20, 30, 15, 25]:
+        rb.RBInsert(NodoRB(v))
 
-    print("Inserindo na árvore AVL: ")
-    for elemento in elementos:
-        avl.rbInsert(NodoAVL(elemento))
-
-    print("\nCaminhando em ordem: ")
-    avl.inOrderTreeWalk(avl.root)
-
-    print("\nCaminhando em pré-ordem: ")
-    avl.preOrderTreeWalk(avl.root)
-
-    print(f"raiz atual da AVL: {avl.root.getInfo()}")
+    print("Raiz:", rb.root.dado, "| Cor:", rb.root.color)          # Esperado: 20 | BLACK
+    print("Esquerda:", rb.root.left.dado, "| Cor:", rb.root.left.color)  # Esperado: 10 | BLACK
+    print("Direita:", rb.root.right.dado, "| Cor:", rb.root.right.color) # Esperado: 30 | BLACK
