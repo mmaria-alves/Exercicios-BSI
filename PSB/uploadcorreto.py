@@ -12,12 +12,12 @@ def fazerUpload(tamanho_arquivo):
     trava.acquire()
 
     if (armazenamento_utilizado + tamanho_arquivo) <= CAPACIDADE_MAXIMA:
-        time.sleep(0.1)
+        time.sleep(0.5)
 
         armazenamento_utilizado += tamanho_arquivo
-        print(f"Armazenamento atual: {armazenamento_utilizado}")
+        print(f"Upload concluído! Armazenamento atual: {armazenamento_utilizado}")
     else:
-        print("Capacidade máxima excedida!")
+        print(f"Capacidade máxima excedida!")
 
     trava.release()
 

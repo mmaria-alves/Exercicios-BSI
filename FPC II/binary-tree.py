@@ -338,24 +338,32 @@ class ArvoreRB(ArvoreBinaria):
             if z.pai.pai is None:
                 break
 
+            # tio de Z
             if z.pai == z.pai.pai.left:
                 y = z.pai.pai.right
 
+                # Caso 1: tio vermelho
                 if self.getColor(y) == "RED":
                     z.pai.color = "BLACK"
                     if y is not None:
                         y.color = "BLACK"
                     z.pai.pai.color = "RED"
                     z = z.pai.pai
+                # Caso 2 e caso 3: tio é preto
                 else: 
+                    
                     if z == z.pai.right:
                         z = z.pai
                         self.leftRotate(z)
-                z.pai.color = "BLACK"
-                z.pai.pai.color = "RED"
-                self.rightRotate(z.pai.pai)
+                    
+                    if z.pai is not None and z.pai.pai is not None:
+                        z.pai.color = "BLACK"
+                        z.pai.pai.color = "RED"
+                        self.rightRotate(z.pai.pai)
             else:
+                # tio do lado oposto
                 y = z.pai.pai.left
+                # Caso 1 
                 if self.getColor(y) == "RED":
                     z.pai.color = "BLACK"
                     if y is not None:
@@ -363,12 +371,15 @@ class ArvoreRB(ArvoreBinaria):
                     z.pai.pai.color = "RED"
                     z = z.pai.pai
                 else:
+                    # z é filho esquerdo
                     if z == z.pai.left:
                         z = z.pai
                         self.rightRotate(z)
-                    z.pai.color = "BLACK"
-                    z.pai.pai.color = "RED"
-                    self.leftRotate(z.pai.pai)
+
+                    if z.pai is not None and z.pai.pai is not None:
+                        z.pai.color = "BLACK"
+                        z.pai.pai.color = "RED"
+                        self.leftRotate(z.pai.pai)
 
         self.root.color = "BLACK"
 
