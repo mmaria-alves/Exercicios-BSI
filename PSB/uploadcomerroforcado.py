@@ -7,10 +7,10 @@ armazenamento_utilizado = 0
 def fazerUpload(tamanho_arquivo):
     global armazenamento_utilizado
     if (tamanho_arquivo + armazenamento_utilizado) <= CAPACIDADE_MAXIMA:
-        time.sleep(0.1)
+        time.sleep(0.5)
 
         armazenamento_utilizado += tamanho_arquivo
-        print(f"Armazenamento atual: {armazenamento_utilizado}")
+        print(f"Upload concluído! Armazenamento atual: {armazenamento_utilizado}")
     else:
         print("Capacidade máxima excedida.")
 

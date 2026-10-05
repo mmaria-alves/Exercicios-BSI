@@ -1,0 +1,30 @@
+DEFINIR CAPACIDADE_MAXIMA = 100
+DEFINIR armazenamento_usado = 0
+
+DEFINIR trava = CRIAR_LOCK()
+
+FUNCAO fazer_upload(tamanho_arquivo):
+    USAR VARIÁVEL GLOBAL armazenamento_usado
+
+    BLOQUEAR(trava)
+
+    SE (armazenamento_usado + tamanho_arquivo) <= CAPACIDADE_MAXIMA
+        PAUSAR_EXECUCAO por 0.1 segundos
+        
+        armazenamento_usado = armazenamento_usado + tamanho_arquivo
+        EXIBIR "Upload concluído! Armazenamento atual: " + armazenamento_usado
+    SENÃO
+        EXIBIR "Capacidade máxima excedida."
+    FIM_SE
+
+    DESBLOQUEAR(trava)
+FIM_FUNCAO
+
+CRIAR THREAD t1 COM TARGET fazer_upload E ARGUMENTOS (70,)
+CRIAR THREAD t2 COM TARGET fazer_upload E ARGUMENTOS (80,)
+
+INICIAR_THREAD(t1)
+INICIAR_THREAD(t2)
+
+AGUARDAR_THREAD_FINALIZAR(t1)
+AGUARDAR_THREAD_FINALIZAR(t2)
