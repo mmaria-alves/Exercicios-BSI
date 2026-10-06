@@ -9,21 +9,15 @@ def funcao(valor_temp):
         z = i * i
 
 def calibrador():
-    # valor temporário e exagerado só pra função iterar sobre
-    valor_absurdo = 100_000_000
-    contador = 0
+    # valor temporário e só pra função iterar sobre
+    amostra = 50_000_000
 
     start_time = time.time()
+    funcao(amostra)
+    duracao = (time.time() - start_time)
 
-    # replica a funcao() mas com um contador de iterações
-    for n in range(valor_absurdo):
-        z = n * n
-        contador += 1
-
-        if contador % 100_000 == 0 and (time.time() - start_time) >= 1.0:
-            break
-
-    return contador * 60
+    # regra de três básica para gerar o n° aproximado de iteracoes
+    return (amostra * 60 / duracao)
 
 def alterar_prioridade(passo):
     tid = os.getpid()
