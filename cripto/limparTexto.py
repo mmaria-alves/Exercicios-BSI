@@ -5,10 +5,12 @@ c_esp_E = ["é", "è", "ẽ", "ë", "ê"]
 c_esp_I = ["í", "ì", "ĩ", "ï", "î"]
 c_esp_O = ["ó", "ò", "õ", "ö", "ô"]
 c_esp_U = ["ú", "ù", "ũ", "ü", "û"]
-c_esp_C = ["c"]
+c_esp_C = ["ç"]
 
 
 def limparTexto(mensagem_poluida):
+    # padronizar tudo em letras minúsculas
+    mensagem_poluida = mensagem_poluida.lower()
     # para remover os espaços
     mensagem_poluida = mensagem_poluida.replace(" ", "")
 
@@ -42,6 +44,6 @@ def limparTexto(mensagem_poluida):
 mensagem_teste1 = "Mas há front2eiras no5s jar8dins da razão"
 mensagem_teste2 = "E3ssá lua cheìa 9traz u_m sentim7ento"
 
-mensagem = input().lower()
+# mensagem = input().lower()
 
-print(limparTexto(mensagem))
+# print(limparTexto(mensagem_teste1))
