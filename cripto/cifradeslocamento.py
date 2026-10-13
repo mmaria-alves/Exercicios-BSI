@@ -31,5 +31,5 @@ def cifraDeslocamento(texto, chave):
     return "".join(texto_criptografado)
 
 
-texto_original = carregar_arquivo('texto_original.txt')
-print(cifraDeslocamento(texto_original, 7))
+# texto_original = carregar_arquivo('texto_original.txt')
+# print(cifraDeslocamento(texto_original, 7))
